@@ -7,26 +7,16 @@ namespace MatrixMultiplications
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            var matrix = MatrixCalculations.Create3DMatrix((-1,0,1.41), (0,2,1), (2,0,2.23));
+            var coordinate = MatrixCalculations.CalculateCoordinate(matrix);
+            Console.WriteLine($"X: {Math.Round(coordinate.X, 2)} Y: {Math.Round(coordinate.Y, 2)}");
+            //Console.ReadLine();
         }
-
-        static Coordinate[] _gatewayCoordinates = new Coordinate[]
-        {
-            new Coordinate(0, 0),
-            new Coordinate(0, 3.6),
-            new Coordinate(5, 3.6)
-        };
-
-        GatewayCoordinates _coordinates = new GatewayCoordinates(_gatewayCoordinates);
+        
     }
 
     class MatrixCalculations
     {
-        private GatewayCoordinates _gatewayCoordinates;
-        public MatrixCalculations(GatewayCoordinates gatewayCoordinates)
-        {
-            _gatewayCoordinates = gatewayCoordinates;
-        }
-        //
         public static double[,] Create3DMatrix(
             (double x, double y, double beaconDistance) gatewayA, 
             (double x, double y, double beaconDistance) gatewayB, 
@@ -40,19 +30,20 @@ namespace MatrixMultiplications
             };
         }
         //
-        public Coordinate CalculateCoordinate(double[,] gatewayMatrix)
+        public static Coordinate CalculateCoordinate(double[,] gatewayMatrix)
         {
             var finalMatrix = MultiplyGatewayCoordinatesByTwo(gatewayMatrix);
+            var determinantMatrix = finalMatrix;
             finalMatrix = SwapAndInverse(finalMatrix);
-            finalMatrix = CalculateDeterminant(finalMatrix);
+            finalMatrix = CalculateDeterminant(determinantMatrix);
             
             //Calculate K Values;
             double[] kValues = new double[3];
             kValues[0] = AddAndSquare(gatewayMatrix[0, 0], gatewayMatrix[0, 1]);
             kValues[1] = AddAndSquare(gatewayMatrix[1, 0], gatewayMatrix[1, 1]);
-            kValues[3] = AddAndSquare(gatewayMatrix[2, 0], gatewayMatrix[2, 1]);
+            kValues[2] = AddAndSquare(gatewayMatrix[2, 0], gatewayMatrix[2, 1]);
             //
-            var bOne = SubtractAndSquare(gatewayMatrix[0, 2], gatewayMatrix[1, 2]) - kValues[0] + kValues[2];
+            var bOne = SubtractAndSquare(gatewayMatrix[0, 2], gatewayMatrix[1, 2]) - kValues[0] + kValues[1];
             var bTwo = SubtractAndSquare(gatewayMatrix[0, 2], gatewayMatrix[2, 2]) - kValues[0] + kValues[2];
             //
             var XY = MultiplyBIntoMatrix(finalMatrix, bOne, bTwo);
@@ -123,7 +114,7 @@ namespace MatrixMultiplications
 
         private static double CalculateDeterminantA(double[,] matrix)
         {
-            var determinantA = 2 * ((matrix[0, 0] * matrix[1, 1]) - (matrix[1, 0] * matrix[0, 1]));
+            var determinantA = ((matrix[0, 0] * matrix[1, 1]) - (matrix[1, 0] * matrix[0, 1]));
             //
             if (determinantA == 0)
             {
