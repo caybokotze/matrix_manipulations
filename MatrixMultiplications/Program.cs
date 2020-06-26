@@ -7,7 +7,7 @@ namespace MatrixMultiplications
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            var matrix = MatrixCalculations.Create3DMatrix((-1,0,1.41), (0,2,1), (2,0,2.23));
+            var matrix = MatrixCalculations.Create3DMatrix((0,0,3.1), (2,0,2.4), (0,2,2));
             var coordinate = MatrixCalculations.CalculateCoordinate(matrix);
             Console.WriteLine($"X: {Math.Round(coordinate.X, 2)} Y: {Math.Round(coordinate.Y, 2)}");
             //Console.ReadLine();
